@@ -1,0 +1,15 @@
+FROM mysql:latest
+
+# Copy the script to the container
+COPY coturn_schema.sql /docker-entrypoint-initdb.d/
+
+# Set the environment variables
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=coturn
+
+# Add a user
+ENV MYSQL_USER=coturn
+ENV MYSQL_PASSWORD=coturn_password
+
+# Execute the script
+CMD ["--init-file", "/docker-entrypoint-initdb.d/script.sql"]

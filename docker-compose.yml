@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  coturn:
+    image: coturn/coturn
+    restart: always
+    volumes:
+      - ./CoTurn/turnserver.conf:/etc/turnserver.conf:ro
+    # ports:
+    #   - "3478:3478"
+    #   - "3478:3478/udp"
+    #   - "3479:3479"
+    #   - "3479:3479/udp"
+    #   - "80:80"
+    #   - "80:80/udp"
+    #   #RELAY 
+    #   - "49152-65535:49152-65535"
+    #   - "49152-65535:49152-65535/udp"
+    network_mode: "host"
+  
+  mysql:
+    image: mariadb
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./MySQL/init_coturn_db.sql:/docker-entrypoint-initdb.d/init_coturn_db.sql:ro
+      - ./MySQL/coturn_schema.sql:/docker-entrypoint-initdb.d/coturn_schema.sql:ro
+      - mysql-data:/var/lib/mysql/data
+    env_file: 
+      - ./MySQL/mysql.env
+    # networks:
+    #   - rtc_backend
+    
+  peer:
+    image: ubuntu:20.04
+    # networks:
+    #   - rtc_backend
+    tty: true
+    stdin_open: true
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+    #  - MYSQL_ROOT_PASSWORD=root
+    # for ubuntu:20.04, without for mysql
+    command: /bin/bash -c "apt update -y && apt upgrade -y && apt install -y iproute2 net-tools iputils-ping sudo coturn && sleep infinity"
+
+volumes:
+  mysql-data:
+
+networks:
+  rtc_backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/16
+          ip_range: 192.168.0.0/24
