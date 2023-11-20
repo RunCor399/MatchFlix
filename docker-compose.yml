@@ -6,7 +6,7 @@ services:
     restart: always
     volumes:
       - ./CoTurn/turnserver.conf:/etc/turnserver.conf:ro
-    # ports:
+    # ports:   => This range of ports is too wide to be handled by a Docker Container (thats why network_mode is set to host)
     #   - "3478:3478"
     #   - "3478:3478/udp"
     #   - "3479:3479"
