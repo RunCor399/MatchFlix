@@ -1,7 +1,9 @@
 
 services:
   coturn:
-    image: coturn/coturn
+    image: 
+      repository: coturn/coturn
+      tag: "4.6"
     #command: ["turnserver", "--log-file=stdout"]
     restart: always
     volumes:
@@ -40,7 +42,7 @@ services:
     stdin_open: true
     environment:
       - DEBIAN_FRONTEND=noninteractive
-    #  - MYSQL_ROOT_PASSWORD=root
+    #  - MYSQL_ROOT_PASSWORD=
     # for ubuntu:20.04, without for mysql
     command: /bin/bash -c "apt update -y && apt upgrade -y && apt install -y iproute2 net-tools iputils-ping sudo coturn && sleep infinity"
 

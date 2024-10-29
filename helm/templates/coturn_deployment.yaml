@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matchflix.fullname" . }}-coturn
+  labels:
+    {{- include "matchflix.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.coturn.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-coturn
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-coturn
+      {{- with .Values.coturn.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}-coturn
+          image: "{{ .Values.coturn.image.repository }}:{{ .Values.coturn.image.tag | default .Chart.AppVersion }}"
+          command: ["/bin/sh", "-c"]
+          args:
+          - |
+            turnserver --log-file=/etc/coturn.log -c /etc/turnconfig/turnserver.conf -M "host=127.0.0.1 dbname=$MYSQL_DATABASE user=$MYSQL_USER password=$USER_PASSWORD port=3306 connect_timeout=10 read_timeout=10"
+
+          imagePullPolicy: {{ .Values.coturn.image.pullPolicy }}
+          env:
+            - name: MYSQL_DATABASE
+              value: {{ .Values.db.database }}
+            - name: MYSQL_USER
+              value: {{ .Values.db.user }}
+          envFrom:
+          - secretRef:
+              name: {{ .Values.dbES.secretName }}
+          - secretRef:
+              name: {{ .Values.coturnES.secretName }}
+          securityContext:
+            runAsUser: 0
+          ports:
+            - name: http
+              containerPort: {{ .Values.coturn.service.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.coturn.resources | nindent 12 }}
+          {{- with .Values.coturn.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.coturn.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

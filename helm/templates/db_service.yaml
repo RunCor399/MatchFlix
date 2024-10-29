@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "matchflix.fullname" . }}-db-svc
+  labels:
+    {{- include "matchflix.labels" . | nindent 4 }}
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: {{ .Release.Name }}-db

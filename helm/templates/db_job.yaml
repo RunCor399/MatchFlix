@@ -1,0 +1,32 @@
+apiVersion: batch/v1 #Modify all, use helm chart hook to run BEFORE coturn
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-mysql-init
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      containers:
+        - name: mysql-init
+          image: mysql:8.0
+          env:
+            - name: MYSQL_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dbES.secretName }}
+                  key: USER_PASSWORD 
+          # CAN USE BUILTIN MYSQL VARIABLES FOR HOST AND USER
+          # Remove hardcoded user
+          command: ["sh", "-c", "mysql -h {{ .Release.Name }}-db-svc -u testuser < /schema/coturn_schema.sql"]
+          volumeMounts:
+            - name: schema-volume
+              mountPath: /schema
+              # subPath: coturn_schema.sql
+      restartPolicy: OnFailure
+      volumes:
+        - name: schema-volume
+          configMap:
+            name: {{ .Release.Name }}-db-schema
