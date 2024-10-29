@@ -1,0 +1,22 @@
+apiVersion: v1
+data:
+  coturn_schema.sql: "USE matchflix;\r\n\r\nCREATE TABLE turnusers_lt (\r\n    realm varchar(127) default
+    '',\r\n    name varchar(512),\r\n    hmackey char(128),\r\n    PRIMARY KEY (realm,name)\r\n);\r\n\r\nCREATE
+    TABLE turn_secret (\r\n\trealm varchar(127) default '',\r\n\tvalue varchar(256),\r\n\tprimary
+    key (realm,value)\r\n);\r\n\r\nCREATE TABLE allowed_peer_ip (\r\n\trealm varchar(127)
+    default '',\r\n\tip_range varchar(256),\r\n\tprimary key (realm,ip_range)\r\n);\r\n\r\nCREATE
+    TABLE denied_peer_ip (\r\n\trealm varchar(127) default '',\r\n\tip_range varchar(256),\r\n\tprimary
+    key (realm,ip_range)\r\n);\r\n\r\nCREATE TABLE turn_origin_to_realm (\r\n\torigin
+    varchar(127),\r\n\trealm varchar(127),\r\n\tprimary key (origin)\r\n);\r\n\r\nCREATE
+    TABLE turn_realm_option (\r\n\trealm varchar(127) default '',\r\n\topt varchar(32),\r\n\tvalue
+    varchar(128),\r\n\tprimary key (realm,opt)\r\n);\r\n\r\nCREATE TABLE oauth_key
+    (\r\n\tkid varchar(128),\r\n\tikm_key varchar(256),\r\n\ttimestamp bigint default
+    0,\r\n\tlifetime integer default 0,\r\n\tas_rs_alg varchar(64) default '',\r\n\trealm
+    varchar(127),\r\n\tprimary key (kid)\r\n);\r\n\r\nCREATE TABLE admin_user (\r\n\tname
+    varchar(32),\r\n\trealm varchar(127),\r\n\tpassword varchar(127),\r\n\tprimary
+    key (name)\r\n);\r\n\r\nINSERT INTO turn_secret(realm,value) VALUES (\"matchflix.it\",\"testsec\");"
+kind: ConfigMap
+metadata:
+  name: matchflix-db-schema
+  labels:
+    {{- include "matchflix.labels" . | nindent 4 }}
