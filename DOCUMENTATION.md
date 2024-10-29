@@ -29,6 +29,7 @@
 
 ### Credentials generation
 - CoTurn server starts up with with a fixed secret key (can this be dynamic? can it be shared with the webapp backend?)
+- CoTurn's startup secret key can be saved in "turn_secret" DB table, making it dynamic => instead of using a static secret, **populate the turn_secret table** so that the secret can be retrieved by the backend
 
 Username and Password generation with python snippet:
 ```py
