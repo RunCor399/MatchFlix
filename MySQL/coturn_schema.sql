@@ -52,3 +52,5 @@ CREATE TABLE admin_user (
 	password varchar(127),
 	primary key (name)
 );
+
+INSERT INTO turn_secret(realm,value) VALUES ("matchflix.it","testsec");

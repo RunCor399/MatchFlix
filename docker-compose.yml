@@ -1,8 +1,8 @@
-version: '3'
 
 services:
   coturn:
     image: coturn/coturn
+    #command: ["turnserver", "--log-file=stdout"]
     restart: always
     volumes:
       - ./CoTurn/conf/turnserver.conf:/etc/turnserver.conf
