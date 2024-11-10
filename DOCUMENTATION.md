@@ -1,8 +1,6 @@
 
 
 ## TODO
-- Use Github issues to manages tasks
-- Investigate interaction between Spring app and CoTurn (how is the user allowed to authenticate to the TURN server? => backend returns credentials to the client, the CoTurn init key in this way is only known to backend and CoTurn itself)
 
 ## STUN Server/Protocol (Session Traversal Utilities for NAT)
 - Used for self discovery of public network IP address (behind NAT)
@@ -27,11 +25,17 @@
 
 ## CoTurn
 
-### Credentials generation
-- CoTurn server starts up with with a fixed secret key (can this be dynamic? can it be shared with the webapp backend?)
-- CoTurn's startup secret key can be saved in "turn_secret" DB table, making it dynamic => instead of using a static secret, **populate the turn_secret table** so that the secret can be retrieved by the backend
+### Authentication Flow
+1. User creates an account
+2. Backend persists the user in Keycloak backed by MySQL DB
+3. Backend generates and returns to the user ephemeral TURN credentials
+4. User authenticates to CoTurn using the ephemeral credentials
 
-Username and Password generation with python snippet:
+### Credentials generation
+- CoTurn server starts up with with a fixed secret key. Instead of hardcoding the secret I can store it in the turn_secret table of the same DB used by the Backend
+- Username and fixed secret are used to generate the ephemeral credentials
+
+Username and fixed secret generation with python snippet:
 ```py
 import hashlib
 import hmac
@@ -51,10 +55,9 @@ print('username: %s' % username)
 print('password: %s' % password)
 ```
 
-- Once I have a username and generated HMAC, update **turnusers_lt** table to store the new user 
-- Therefore Spring app has access to the same DB as the TURN server
+
 
 ## Problems
-- Share CoTurn fixed key with the webapp backend
+- Share CoTurn fixed key with the webapp backend (k8s secret)
 
 

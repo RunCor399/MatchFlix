@@ -1,8 +1,8 @@
 import hashlib
 
-username = "testuser"
-realm = "matchflix.it"
-password = "pass"
+username = "testuser1"
+realm = "matchflix"
+password = "testpass1"
 
 # Create the input string
 input_str = f"{username}:{realm}:{password}"
