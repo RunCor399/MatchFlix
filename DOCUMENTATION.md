@@ -19,7 +19,7 @@
 [] Connect the CIs so that when Spring or React code is built, a new deployment pipeline is started. Deployment pipeline should also be started when the code of the Helm chart is updated itself
 
 ### Tech Debt
-[]. Switch Coturn DB from MySQL to the Postgres (db name: matchflix_coturn)
+[] Switch Coturn DB from MySQL to the Postgres (db name: matchflix_coturn)
 
 
 
