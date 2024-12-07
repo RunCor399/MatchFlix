@@ -4,7 +4,7 @@ This works without a static secret or a turn_secret value
 
 (MySQL reachable at 127.0.0.1 because coturn is running in 'host' network mode)
 Turn admin command to add user in MySQL
-turnadmin -a -M "host=127.0.0.1 dbname=coturn user=coturn password=coturn_password" -u testuser -r matchflix.it -p pass
+turnadmin -a -M "host=127.0.0.1 dbname=coturn user=coturn password=" -u user -r matchflix -p pass
 
 
 

@@ -4,12 +4,12 @@ FROM mysql:latest
 COPY coturn_schema.sql /docker-entrypoint-initdb.d/
 
 # Set the environment variables
-ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_ROOT_PASSWORD=
 ENV MYSQL_DATABASE=coturn
 
 # Add a user
 ENV MYSQL_USER=coturn
-ENV MYSQL_PASSWORD=coturn_password
+ENV MYSQL_PASSWORD=
 
 # Execute the script
 CMD ["--init-file", "/docker-entrypoint-initdb.d/script.sql"]
