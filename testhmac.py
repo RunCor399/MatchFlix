@@ -11,7 +11,6 @@ input_str = f"{username}:{realm}:{password}"
 hmac = hashlib.md5(input_str.encode()).hexdigest()
 
 print(hmac)
-<<<<<<< HEAD
 
 
 
@@ -40,5 +39,3 @@ print(hmac)
 # secret = "secretkey"
 # credentials = get_turn_credentials(name, secret)
 # print(credentials)
-=======
->>>>>>> cbf5f8905d326da358a2cabf1f3c35e18b2868f4
