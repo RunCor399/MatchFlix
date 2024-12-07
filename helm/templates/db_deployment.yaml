@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matchflix.fullname" . }}-db
+  labels:
+    {{- include "matchflix.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.db.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-db
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-db
+      {{- with .Values.db.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}-db
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dbES.secretName }}
+                  key: ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              value: {{ .Values.db.database }}
+            - name: MYSQL_USER
+              value: {{ .Values.db.user }}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dbES.secretName }}
+                  key: USER_PASSWORD
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: db-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: db-persistent-storage
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-db-pvc
