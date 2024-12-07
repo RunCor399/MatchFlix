@@ -1,1 +1,3 @@
 **/helm_resources/gitlab_eso_token.yaml
+**/Chart.lock
+**/charts/*.tgz

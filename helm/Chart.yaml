@@ -1,6 +1,11 @@
 apiVersion: v2
 name: matchflix
-description: A Helm chart for Kubernetes
+description: Matchflix Helm Chart
 type: application
-version: 0.1.0
-appVersion: "0.1.0"
+dependencies:
+- name: keycloak
+  version: "24.2.2"
+  repository: "oci://registry-1.docker.io/bitnamicharts"
+version: 0.2.0
+appVersion: "0.2.0"
+

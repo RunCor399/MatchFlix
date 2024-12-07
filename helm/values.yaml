@@ -8,6 +8,10 @@ dbES:
   secretName: &dbSecretName "db-secrets"
   sourceSecretName: &dbSourceSecretName "db_secrets"
 
+keycloakES:
+  secretName: &keycloakSecretName "keycloak-secrets"
+  sourceSecretName: &keycloakSourceSecretName "keycloak_secrets"
+
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 imagePullSecrets: []
 esoTokenName: "gitlab-secret-store" 
@@ -75,4 +79,33 @@ db:
   database: "matchflix"
   storageSize: "10Gi"
 
+keycloak:
+  extraEnvVars:
+    - name: KEYCLOAK_EXTRA_ARGS
+      value: '--import-realm'
+    - name: KEYCLOAK_LOG_LEVEL
+      value: DEBUG
 
+  extraVolumes:
+  - name: keycloak-realms-config-vol
+    configMap:
+      name: keycloak-realms-config
+
+  extraVolumeMounts:
+  - name: keycloak-realms-config-vol
+    mountPath: /opt/bitnami/keycloak/data/import
+    readOnly: true
+
+  postgresql:
+    enabled: true
+    auth:
+      username: psql_user
+      database: matchflix_keycloak
+      existingSecret: "db-secrets" #Why above variable not working with &?
+      secretKeys:
+        adminPasswordKey: "ROOT_PASSWORD"
+        userPasswordKey: "USER_PASSWORD"
+  auth:
+    adminUser: kc_admin
+    existingSecret: "keycloak-secrets" #Why above variable not working with &?
+    passwordSecretKey: "KC_ADMIN_PASSWORD"

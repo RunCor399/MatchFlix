@@ -1,6 +1,29 @@
 
 
 ## TODO
+### Main
+[x] Automate Keycloak Realm import when installing the chart   
+[] Create basic Spring Application that integrates with Keycloak and Postgres   (db name: matchflix_app)
+    [] Study Kotlin Again
+    [] Install IntelliJ
+    [] Code
+[] Add Spring app to Helm Chart
+[] Setup CI to build Spring app code and deploy new image
+[] Setup CI to build and deploy Helm Chart
+[] Create basic React Web App that invokes Spring App APIs
+[] Add React Web App to Helm Chart
+[] Setup CI to build React app code and deploy new image
+[] Modify CoTurn server configuration with a static secret stored in DB or config file (DB would be better)
+[] Share secret between CoTurn and Spring App, and implement endpoint to return TURN credentials to REACT WebApp
+[] Test the ability of the React App to authenticate with the CoTurn Server using the credentials returned by the Spring App
+[] Connect the CIs so that when Spring or React code is built, a new deployment pipeline is started. Deployment pipeline should also be started when the code of the Helm chart is updated itself
+
+### Tech Debt
+[]. Switch Coturn DB from MySQL to the Postgres (db name: matchflix_coturn)
+
+
+
+
 
 ## STUN Server/Protocol (Session Traversal Utilities for NAT)
 - Used for self discovery of public network IP address (behind NAT)
